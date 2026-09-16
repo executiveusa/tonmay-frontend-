@@ -483,7 +483,7 @@ export default function TonmaySite() {
           <section id="about" className="studio-section">
             <Reveal className="studio-image">
               <motion.img
-                src="/images/story-crew.webp"
+                src="/images/story-crew-anton.webp"
                 alt="Visual storytellers collaborating on location"
                 loading="lazy"
                 decoding="async"
@@ -509,7 +509,7 @@ export default function TonmaySite() {
 
           <section className="process-section">
             <Reveal className="process-visual">
-              <img src="/images/process-camera.webp" alt="Hands preparing professional camera equipment" loading="lazy" decoding="async" />
+              <img src="/images/process-camera-anton.webp" alt="Hands preparing professional camera equipment" loading="lazy" decoding="async" />
             </Reveal>
             <Reveal className="process-copy">
               <p className="eyebrow">How it works</p>
