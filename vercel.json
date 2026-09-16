@@ -1,0 +1,6 @@
+{
+  "buildCommand": "npm run build",
+  "rewrites": [
+    { "source": "/((?!_next/|images/|favicon\\.svg|file\\.svg|globe\\.svg|window\\.svg).*)", "destination": "/api/$1" }
+  ]
+}

@@ -110,8 +110,8 @@ function Reveal({
   return (
     <motion.div
       className={className}
-      initial={{ opacity: 0, y: 18, filter: "blur(8px)" }}
-      whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+      initial={{ opacity: 0, y: 18 }}
+      whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, amount: 0.16 }}
       transition={{ duration: 0.62, delay, ease: [0.22, 1, 0.36, 1] }}
     >
@@ -135,17 +135,20 @@ export default function TonmaySite() {
     target: heroRef,
     offset: ["start start", "end start"],
   });
-  const heroImageY = useTransform(heroProgress, [0, 1], ["0%", "13%"]);
-  const heroImageScale = useTransform(heroProgress, [0, 1], [1.035, 1.1]);
-  const heroSkyY = useTransform(heroProgress, [0, 1], ["0%", "5%"]);
+  // This adjusts the camera framing inside a sticky stage only. Native scroll
+  // remains untouched, so mobile momentum and address-bar behavior stay intact.
+  const heroImageY = useTransform(heroProgress, [0, 1], ["0%", "8%"]);
+  const heroImageScale = useTransform(heroProgress, [0, 1], [1.025, 1.075]);
+  const heroSkyY = useTransform(heroProgress, [0, 1], ["0%", "3%"]);
   // Keep the subject perfectly registered with the base image. Its duplicate
   // exists only to place Tonmay in front of the headline, never to alter him.
-  const heroForegroundY = useTransform(heroProgress, [0, 1], ["0%", "13%"]);
-  const heroForegroundScale = useTransform(heroProgress, [0, 1], [1.035, 1.1]);
-  const heroCopyY = useTransform(heroProgress, [0, 1], ["0%", "25%"]);
-  const heroCopyOpacity = useTransform(heroProgress, [0, 0.7], [1, 0]);
-  const heroFrameScale = useTransform(heroProgress, [0, 0.78], [1, 0.94]);
-  const heroFrameOpacity = useTransform(heroProgress, [0, 0.68], [1, 0]);
+  const heroForegroundY = useTransform(heroProgress, [0, 1], ["0%", "8%"]);
+  const heroForegroundScale = useTransform(heroProgress, [0, 1], [1.025, 1.075]);
+  const heroCopyY = useTransform(heroProgress, [0, 1], ["0%", "12%"]);
+  const heroCopyOpacity = useTransform(heroProgress, [0, 0.86], [1, 0.12]);
+  const heroFrameY = useTransform(heroProgress, [0, 1], ["0%", "-2%"]);
+  const heroFrameScale = useTransform(heroProgress, [0, 1], [1, 1.018]);
+  const heroFrameOpacity = useTransform(heroProgress, [0, 0.86], [1, 0.4]);
 
   useMotionValueEvent(scrollY, "change", (latest) => {
     setHeaderScrolled(latest > 52);
@@ -282,7 +285,7 @@ export default function TonmaySite() {
               </motion.div>
               <motion.div
                 className="hero-frame"
-                style={reduceMotion ? undefined : { scale: heroFrameScale, opacity: heroFrameOpacity }}
+                style={reduceMotion ? undefined : { y: heroFrameY, scale: heroFrameScale, opacity: heroFrameOpacity }}
                 aria-hidden="true"
               >
                 <span>TONMAY / VISUAL STORIES</span>
@@ -308,7 +311,7 @@ export default function TonmaySite() {
                 </h1>
                 <div className="hero-bottom">
                   <p className="hero-deck">
-                    Seattle-area photography for artists, organizations, and people with something real to share—from a single portrait to a complete visual campaign.
+                    Photography for people, teams, and organizations across Seattle and Western Washington.
                   </p>
                   <div className="hero-actions">
                     <motion.a
@@ -350,7 +353,7 @@ export default function TonmaySite() {
               <p className="eyebrow">Portraits / events / documentary</p>
               <h2>Made to feel<br />like you were there.</h2>
               <p>
-                I photograph people as they are and places as they feel. The result is polished enough to publish and personal enough to remember.
+                Portraits, events, and places photographed with attention to the people in them.
               </p>
             </Reveal>
 
@@ -361,8 +364,8 @@ export default function TonmaySite() {
                   type="button"
                   key={photo.number}
                   onClick={(event) => openPhoto(index, event.currentTarget)}
-                  initial={{ opacity: 0, y: 18, filter: "blur(8px)" }}
-                  whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+                  initial={{ opacity: 0, y: 18 }}
+                  whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true, amount: 0.12 }}
                   transition={{ duration: 0.62, delay: index * 0.04, ease: [0.22, 1, 0.36, 1] }}
                   whileHover="hover"
@@ -395,7 +398,7 @@ export default function TonmaySite() {
                 <h3>See what I’m<br />shooting now.</h3>
               </div>
               <p>
-                My Instagram is the fastest way to see new portraits, events, travel photography, and everyday documentary work.
+                See the latest portraits, events, and documentary work.
               </p>
               <div className="instagram-actions">
                 <motion.a
@@ -421,13 +424,13 @@ export default function TonmaySite() {
           <section id="film" className="film-section">
             <motion.div
               className="film-image"
-              initial={{ clipPath: "inset(8% 8% 8% 8%)" }}
-              whileInView={{ clipPath: "inset(0% 0% 0% 0%)" }}
+              initial={{ opacity: 0.72, y: 16 }}
+              whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, amount: 0.18 }}
               transition={{ duration: 1.15, ease: [0.22, 1, 0.36, 1] }}
             >
               <motion.img
-                src="/images/hero-seattle-film.png"
+                src="/images/hero-seattle-film.webp"
                 alt="Camera operator filming the Seattle skyline"
                 loading="lazy"
                 decoding="async"
@@ -441,7 +444,7 @@ export default function TonmaySite() {
               <p className="eyebrow">02 — Film & documentary</p>
               <h2>Need more<br />than stills?</h2>
               <p>
-                I also direct and produce select documentaries, interviews, music projects, and brand films. You get the same human approach, with motion, sound, and editing built around the story.
+                For interviews, documentaries, music projects, and brand films, I can handle the shoot and the edit.
               </p>
               <p className="film-note">
                 Film projects are scoped individually. I can work with a small, focused setup or assemble the right crew for a larger production.
@@ -455,7 +458,7 @@ export default function TonmaySite() {
               <p className="eyebrow">Ways to work together</p>
               <h2>Choose what<br />you need.</h2>
               <p>
-                Start with photography. Add film when the story needs movement, sound, or a longer format.
+                Choose photography, film, or both.
               </p>
             </Reveal>
             <div className="capability-list">
@@ -480,7 +483,7 @@ export default function TonmaySite() {
           <section id="about" className="studio-section">
             <Reveal className="studio-image">
               <motion.img
-                src="/images/story-crew.png"
+                src="/images/story-crew.webp"
                 alt="Visual storytellers collaborating on location"
                 loading="lazy"
                 decoding="async"
@@ -495,7 +498,7 @@ export default function TonmaySite() {
               <p className="eyebrow">About Tonmay</p>
               <blockquote>“Close enough to feel it. Patient enough to see it.”</blockquote>
               <p>
-                I’m a Seattle-area photographer and visual storyteller working across Western Washington. I focus on real people, real environments, and the moments between the planned ones.
+                I’m a Seattle-area photographer. I work with real people, real places, and the moments between the planned ones.
               </p>
               <p>
                 I can lead a quiet portrait session, document a crowded event, build a complete image library for a brand, or expand the same point of view into a film.
@@ -506,7 +509,7 @@ export default function TonmaySite() {
 
           <section className="process-section">
             <Reveal className="process-visual">
-              <img src="/images/process-camera.png" alt="Hands preparing professional camera equipment" loading="lazy" decoding="async" />
+              <img src="/images/process-camera.webp" alt="Hands preparing professional camera equipment" loading="lazy" decoding="async" />
             </Reveal>
             <Reveal className="process-copy">
               <p className="eyebrow">How it works</p>
@@ -525,7 +528,7 @@ export default function TonmaySite() {
               <p className="eyebrow">Check availability</p>
               <h2>Tell me about<br />your shoot.</h2>
               <p>
-                The fastest way to start is a direct message. Include the basics below and I’ll reply with questions, availability, and the clearest next step.
+                Send the basics below. I’ll reply with availability and next steps.
               </p>
             </Reveal>
 
