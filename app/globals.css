@@ -785,8 +785,18 @@ img { display: block; width: 100%; }
   align-items: stretch;
   overflow: hidden;
 }
-.film-image { min-height: 760px; overflow: hidden; }
+.film-image { min-height: 760px; overflow: hidden; position: relative; }
 .film-image img { height: 100%; object-fit: cover; filter: saturate(.72) contrast(1.08); }
+.parallax-frame::before {
+  content: "";
+  position: absolute;
+  z-index: 3;
+  inset: clamp(12px, 2vw, 28px);
+  border: 1px solid rgba(238,241,237,.42);
+  pointer-events: none;
+}
+.parallax-frame > img { will-change: transform; }
+.parallax-frame > span { z-index: 4; }
 .film-copy {
   padding: clamp(85px, 11vw, 165px) clamp(34px, 7vw, 105px);
   display: flex;
@@ -955,8 +965,12 @@ img { display: block; width: 100%; }
 .capability p { grid-column: 2; max-width: 520px; margin: 0; color: #515b60; line-height: 1.7; }
 
 .studio-section { min-height: 900px; display: grid; grid-template-columns: 1.08fr .92fr; background: var(--navy-2); }
+.studio-section > div:first-child { min-height: 100%; }
+.studio-section > div:first-child .studio-image { height: 100%; }
+.process-section > div:first-child { min-width: 0; }
 .studio-image { position: relative; overflow: hidden; }
 .studio-image img { height: 100%; object-fit: cover; }
+.process-visual { position: relative; overflow: hidden; }
 .studio-image::after { content:""; position:absolute; inset:0; background: linear-gradient(180deg, transparent 65%, rgba(6,16,28,.8)); }
 .studio-image > span { position: absolute; z-index:2; left: 28px; bottom: 26px; font: 10px/1 "IBM Plex Mono", monospace; letter-spacing: .12em; text-transform:uppercase; }
 .studio-copy { padding: clamp(80px, 10vw, 150px) clamp(34px, 7vw, 100px); display: flex; flex-direction: column; justify-content: center; }

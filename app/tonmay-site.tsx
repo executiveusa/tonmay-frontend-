@@ -125,6 +125,9 @@ export default function TonmaySite() {
   const [headerScrolled, setHeaderScrolled] = useState(false);
   const [selectedPhoto, setSelectedPhoto] = useState<number | null>(null);
   const heroRef = useRef<HTMLElement>(null);
+  const filmRef = useRef<HTMLElement>(null);
+  const studioRef = useRef<HTMLDivElement>(null);
+  const processRef = useRef<HTMLDivElement>(null);
   const lightboxRef = useRef<HTMLDivElement>(null);
   const lightboxCloseRef = useRef<HTMLButtonElement>(null);
   const lightboxTriggerRef = useRef<HTMLElement | null>(null);
@@ -149,6 +152,17 @@ export default function TonmaySite() {
   const heroFrameY = useTransform(heroProgress, [0, 1], ["0%", "-2%"]);
   const heroFrameScale = useTransform(heroProgress, [0, 1], [1, 1.018]);
   const heroFrameOpacity = useTransform(heroProgress, [0, 0.86], [1, 0.4]);
+  const { scrollYProgress: filmProgress } = useScroll({ target: filmRef, offset: ["start end", "end start"] });
+  const { scrollYProgress: studioProgress } = useScroll({ target: studioRef, offset: ["start end", "end start"] });
+  const { scrollYProgress: processProgress } = useScroll({ target: processRef, offset: ["start end", "end start"] });
+  // Editorial images get a small camera drift, inside their own clipped frames.
+  // This never changes native scroll or the pixels of the photographs.
+  const filmImageY = useTransform(filmProgress, [0, 0.5, 1], ["-7%", "0%", "7%"]);
+  const filmImageScale = useTransform(filmProgress, [0, 0.5, 1], [1.1, 1.025, 1.1]);
+  const studioImageY = useTransform(studioProgress, [0, 0.5, 1], ["-6%", "0%", "6%"]);
+  const studioImageScale = useTransform(studioProgress, [0, 0.5, 1], [1.08, 1.02, 1.08]);
+  const processImageY = useTransform(processProgress, [0, 0.5, 1], ["-5%", "0%", "5%"]);
+  const processImageScale = useTransform(processProgress, [0, 0.5, 1], [1.07, 1.015, 1.07]);
 
   useMotionValueEvent(scrollY, "change", (latest) => {
     setHeaderScrolled(latest > 52);
@@ -421,11 +435,11 @@ export default function TonmaySite() {
             </Reveal>
           </section>
 
-          <section id="film" className="film-section">
+          <section id="film" className="film-section" ref={filmRef}>
             <motion.div
-              className="film-image"
-              initial={{ opacity: 0.72, y: 16 }}
-              whileInView={{ opacity: 1, y: 0 }}
+              className="film-image parallax-frame"
+              initial={{ opacity: 0.72 }}
+              whileInView={{ opacity: 1 }}
               viewport={{ once: true, amount: 0.18 }}
               transition={{ duration: 1.15, ease: [0.22, 1, 0.36, 1] }}
             >
@@ -434,10 +448,7 @@ export default function TonmaySite() {
                 alt="Camera operator filming the Seattle skyline"
                 loading="lazy"
                 decoding="async"
-                initial={{ scale: 1.12 }}
-                whileInView={{ scale: 1 }}
-                viewport={{ once: true, amount: 0.18 }}
-                transition={{ duration: 1.4, ease: [0.22, 1, 0.36, 1] }}
+                style={reduceMotion ? undefined : { y: filmImageY, scale: filmImageScale }}
               />
             </motion.div>
             <Reveal className="film-copy">
@@ -481,19 +492,18 @@ export default function TonmaySite() {
           </section>
 
           <section id="about" className="studio-section">
-            <Reveal className="studio-image">
-              <motion.img
-                src="/images/story-crew-anton-v2.webp"
-                alt="Visual storytellers collaborating on location"
-                loading="lazy"
-                decoding="async"
-                initial={{ scale: 1.08 }}
-                whileInView={{ scale: 1 }}
-                viewport={{ once: true, amount: 0.2 }}
-                transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1] }}
-              />
-              <span>Built in the Pacific Northwest</span>
-            </Reveal>
+            <div ref={studioRef}>
+              <Reveal className="studio-image parallax-frame">
+                <motion.img
+                  src="/images/story-crew-anton-v2.webp"
+                  alt="Visual storytellers collaborating on location"
+                  loading="lazy"
+                  decoding="async"
+                  style={reduceMotion ? undefined : { y: studioImageY, scale: studioImageScale }}
+                />
+                <span>Built in the Pacific Northwest</span>
+              </Reveal>
+            </div>
             <Reveal className="studio-copy">
               <p className="eyebrow">About Tonmay</p>
               <p>
@@ -507,9 +517,17 @@ export default function TonmaySite() {
           </section>
 
           <section className="process-section">
-            <Reveal className="process-visual">
-              <img src="/images/process-camera-anton-v2.webp" alt="Hands preparing professional camera equipment" loading="lazy" decoding="async" />
-            </Reveal>
+            <div ref={processRef}>
+              <Reveal className="process-visual parallax-frame">
+                <motion.img
+                  src="/images/process-camera-anton-v2.webp"
+                  alt="Hands preparing professional camera equipment"
+                  loading="lazy"
+                  decoding="async"
+                  style={reduceMotion ? undefined : { y: processImageY, scale: processImageScale }}
+                />
+              </Reveal>
+            </div>
             <Reveal className="process-copy">
               <p className="eyebrow">How it works</p>
               <h2>From inquiry<br />to final files.</h2>
