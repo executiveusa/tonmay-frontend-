@@ -563,7 +563,6 @@ export default function TonmaySite() {
               >
                 Email Tonmay <Arrow />
               </a>
-              <p className="inquiry-note">Opens your email app to tonmay.production@gmail.com.</p>
             </Reveal>
           </section>
         </main>
