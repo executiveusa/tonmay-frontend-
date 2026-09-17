@@ -527,7 +527,7 @@ export default function TonmaySite() {
               <p className="eyebrow">Check availability</p>
               <h2>Tell me about<br />your shoot.</h2>
               <p>
-                Send the basics below. I’ll reply with availability and next steps.
+                Email the basics below. I’ll reply with availability and next steps.
               </p>
             </Reveal>
 
@@ -541,13 +541,11 @@ export default function TonmaySite() {
               </ol>
               <a
                 className="button button-acid inquiry-button"
-                href="https://www.instagram.com/tonmayproduction/"
-                target="_blank"
-                rel="noreferrer"
+                href="mailto:tonmay.production@gmail.com?subject=Tonmay%20Production%20project%20inquiry"
               >
-                Start on Instagram <Arrow />
+                Email Tonmay <Arrow />
               </a>
-              <p className="inquiry-note">Opens @tonmayproduction in a new tab.</p>
+              <p className="inquiry-note">Opens your email app to tonmay.production@gmail.com.</p>
             </Reveal>
           </section>
         </main>
