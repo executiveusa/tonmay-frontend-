@@ -262,7 +262,7 @@ export default function TonmaySite() {
               <div className="hero-image">
                 <motion.img
                   className="hero-image-base"
-                  src="/images/tonmay-mountain-hero.webp"
+                  src="/images/tonmay-mountain-hero-4k.webp"
                   alt="Tonmay standing with his camera above a sea of clouds in the mountains"
                   style={reduceMotion ? undefined : { y: heroImageY, scale: heroImageScale }}
                 />
@@ -271,7 +271,7 @@ export default function TonmaySite() {
                   style={reduceMotion ? undefined : { y: heroSkyY }}
                   aria-hidden="true"
                 >
-                  <img src="/images/tonmay-mountain-hero.webp" alt="" />
+                  <img src="/images/tonmay-mountain-hero-4k.webp" alt="" />
                 </motion.div>
               </div>
 
@@ -281,7 +281,7 @@ export default function TonmaySite() {
                 style={reduceMotion ? undefined : { y: heroForegroundY, scale: heroForegroundScale }}
                 aria-hidden="true"
               >
-                <img src="/images/tonmay-mountain-hero.webp" alt="" />
+                <img src="/images/tonmay-mountain-hero-4k.webp" alt="" />
               </motion.div>
               <motion.div
                 className="hero-frame"
@@ -483,7 +483,7 @@ export default function TonmaySite() {
           <section id="about" className="studio-section">
             <Reveal className="studio-image">
               <motion.img
-                src="/images/story-crew-anton.webp"
+                src="/images/story-crew-anton-v2.webp"
                 alt="Visual storytellers collaborating on location"
                 loading="lazy"
                 decoding="async"
@@ -496,7 +496,6 @@ export default function TonmaySite() {
             </Reveal>
             <Reveal className="studio-copy">
               <p className="eyebrow">About Tonmay</p>
-              <blockquote>“Close enough to feel it. Patient enough to see it.”</blockquote>
               <p>
                 I’m a Seattle-area photographer. I work with real people, real places, and the moments between the planned ones.
               </p>
@@ -509,7 +508,7 @@ export default function TonmaySite() {
 
           <section className="process-section">
             <Reveal className="process-visual">
-              <img src="/images/process-camera-anton.webp" alt="Hands preparing professional camera equipment" loading="lazy" decoding="async" />
+              <img src="/images/process-camera-anton-v2.webp" alt="Hands preparing professional camera equipment" loading="lazy" decoding="async" />
             </Reveal>
             <Reveal className="process-copy">
               <p className="eyebrow">How it works</p>
