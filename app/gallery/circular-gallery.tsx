@@ -217,6 +217,7 @@ export default function CircularGallery({
             <div
               className="archive-mobile-grid"
               aria-label="Swipe through the photography archive"
+              aria-roledescription="carousel"
               role="region"
             >
               {items.map((item, index) => (
