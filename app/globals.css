@@ -648,6 +648,12 @@ img { display: block; width: 100%; }
   filter: saturate(.82) contrast(1.04);
   transition: transform 700ms cubic-bezier(.22, 1, .36, 1), filter 350ms ease;
 }
+.circular-card img.archive-image-contain {
+  object-fit: contain;
+  object-position: center !important;
+  background: #03080c;
+  filter: saturate(.9) contrast(1.02);
+}
 .circular-card:hover img,
 .circular-card:focus-visible img {
   transform: scale(1.045);
@@ -1241,6 +1247,13 @@ footer > div a { width:fit-content; font-size:13px; border-bottom:1px solid; pad
     aspect-ratio: 4 / 5;
     object-fit: cover;
     filter: saturate(.9) contrast(1.04);
+  }
+  .archive-mobile-card img.archive-image-contain {
+    object-fit: contain;
+    object-position: center !important;
+    background: #03080c;
+    filter: none;
+    transform: none;
   }
   .archive-mobile-card > span {
     display: grid;
