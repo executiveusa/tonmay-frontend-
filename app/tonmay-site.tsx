@@ -122,9 +122,13 @@ function Reveal({
 
 export default function TonmaySite() {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
   const [headerScrolled, setHeaderScrolled] = useState(false);
   const [selectedPhoto, setSelectedPhoto] = useState<number | null>(null);
   const heroRef = useRef<HTMLElement>(null);
+  const mobileNavRef = useRef<HTMLElement>(null);
+  const menuButtonRef = useRef<HTMLButtonElement>(null);
+  const restoreMenuFocusRef = useRef(false);
   const filmRef = useRef<HTMLElement>(null);
   const studioRef = useRef<HTMLDivElement>(null);
   const processRef = useRef<HTMLDivElement>(null);
@@ -169,13 +173,58 @@ export default function TonmaySite() {
   });
 
   useEffect(() => {
+    const mediaQuery = window.matchMedia("(max-width: 900px)");
+    const updateViewport = () => setIsMobile(mediaQuery.matches);
+    updateViewport();
+    mediaQuery.addEventListener("change", updateViewport);
+    return () => mediaQuery.removeEventListener("change", updateViewport);
+  }, []);
+
+  useEffect(() => {
+    if (!menuOpen) return;
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = previousOverflow;
+    };
+  }, [menuOpen]);
+
+  useEffect(() => {
+    if (!menuOpen) {
+      if (restoreMenuFocusRef.current) {
+        restoreMenuFocusRef.current = false;
+        window.requestAnimationFrame(() => menuButtonRef.current?.focus());
+      }
+      return;
+    }
+
+    const links = Array.from(mobileNavRef.current?.querySelectorAll<HTMLAnchorElement>("a") ?? []);
+    const firstLink = links[0];
+    const lastLink = links.at(-1);
+    window.requestAnimationFrame(() => firstLink?.focus());
+
     function onKeyDown(event: KeyboardEvent) {
-      if (event.key !== "Escape") return;
-      setMenuOpen(false);
+      if (event.key === "Escape") {
+        restoreMenuFocusRef.current = true;
+        setMenuOpen(false);
+        return;
+      }
+      if (event.key !== "Tab" || !firstLink || !lastLink) return;
+
+      if (event.shiftKey && document.activeElement === firstLink) {
+        event.preventDefault();
+        menuButtonRef.current?.focus();
+      } else if (!event.shiftKey && document.activeElement === lastLink) {
+        event.preventDefault();
+        menuButtonRef.current?.focus();
+      } else if (!event.shiftKey && document.activeElement === menuButtonRef.current) {
+        event.preventDefault();
+        firstLink.focus();
+      }
     }
     window.addEventListener("keydown", onKeyDown);
     return () => window.removeEventListener("keydown", onKeyDown);
-  }, []);
+  }, [menuOpen]);
 
   useEffect(() => {
     if (selectedPhoto === null) return;
@@ -237,7 +286,7 @@ export default function TonmaySite() {
         <a className="skip-link" href="#main">Skip to main content</a>
         <motion.div className="page-progress" style={{ scaleX: pageProgressSpring }} aria-hidden="true" />
 
-        <header className={headerScrolled ? "site-header is-scrolled" : "site-header"}>
+        <header className={`site-header${headerScrolled ? " is-scrolled" : ""}${menuOpen ? " is-menu-open" : ""}`}>
           <a href="#top" className="brand" onClick={closeMenu} aria-label="Tonmay Production home">
             <span className="live-dot" />
             <span>tonmay</span>
@@ -245,6 +294,7 @@ export default function TonmaySite() {
 
           <nav
             id="mobile-navigation"
+            ref={mobileNavRef}
             className={menuOpen ? "nav is-open" : "nav"}
             aria-label="Primary navigation"
           >
@@ -261,6 +311,7 @@ export default function TonmaySite() {
 
           <button
             className="menu-button"
+            ref={menuButtonRef}
             type="button"
             aria-expanded={menuOpen}
             aria-controls="mobile-navigation"
@@ -315,7 +366,7 @@ export default function TonmaySite() {
 
               <motion.div
                 className="hero-copy"
-                style={reduceMotion ? undefined : { y: heroCopyY, opacity: heroCopyOpacity }}
+                style={reduceMotion || isMobile ? undefined : { y: heroCopyY, opacity: heroCopyOpacity }}
               >
                 <p className="eyebrow">Portraits · Events · Brands · Documentary</p>
                 <h1>
