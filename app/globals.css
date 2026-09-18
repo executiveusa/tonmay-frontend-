@@ -1017,8 +1017,8 @@ img { display: block; width: 100%; }
 .inquiry-panel li strong { font: 600 clamp(24px, 2.4vw, 36px)/1 "Barlow Condensed", sans-serif; text-transform: uppercase; }
 .inquiry-button { width: fit-content; }
 .inquiry-note { margin: 14px 0 0; color: var(--fog); font-size: 12px; }
-.project-form { display:grid; gap:26px; }
-.project-form label { display:grid; gap:9px; }
+.project-form { display:grid; gap:32px; }
+.project-form label { display:grid; gap:11px; }
 .project-form label > span { font:10px/1 "IBM Plex Mono", monospace; text-transform:uppercase; letter-spacing:.12em; color:var(--fog); }
 .project-form input, .project-form textarea, .project-form select {
   width:100%; color:var(--paper); background:transparent; border:0; border-bottom:1px solid rgba(238,241,237,.42); border-radius:0; padding:14px 0 16px;
@@ -1026,24 +1026,24 @@ img { display: block; width: 100%; }
 .project-form textarea { resize:vertical; }
 .project-form select { color-scheme:dark; }
 .project-form input::placeholder, .project-form textarea::placeholder { color:rgba(199,206,210,.55); }
-.form-row { display:grid; grid-template-columns:1fr 1fr; gap:28px; }
+.form-row { display:grid; grid-template-columns:1fr 1fr; column-gap:28px; row-gap:26px; }
 .submit-button { justify-self:start; margin-top:14px; }
 .submit-button:disabled { opacity:.62; cursor:wait; }
-.form-status { min-height:24px; color:var(--fog); margin:0; font-size:13px; line-height:1.6; }
+.form-status { min-height:24px; color:var(--fog); margin:0; font-size:13px; line-height:1.65; }
 
-.inquiry-progress { display:grid; gap:10px; }
+.inquiry-progress { display:grid; gap:11px; margin-bottom:2px; }
 .inquiry-progress > span, .inquiry-progress small { font:500 10px/1.3 "IBM Plex Mono",monospace; text-transform:uppercase; letter-spacing:.1em; color:var(--fog); }
 .inquiry-progress > div { height:2px; background:rgba(238,241,237,.16); overflow:hidden; }
 .inquiry-progress i { display:block; height:100%; background:var(--acid); transition:width 260ms cubic-bezier(.22,1,.36,1); }
-.inquiry-step { display:grid; gap:24px; margin:0; padding:0; border:0; min-inline-size:0; }
-.inquiry-step legend { padding:0; font:600 clamp(40px,4.4vw,68px)/.94 "Barlow Condensed",sans-serif; text-transform:uppercase; letter-spacing:-.035em; }
-.inquiry-step > p { margin:-10px 0 0; max-width:560px; color:var(--fog); line-height:1.6; }
-.project-type-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:10px; }
+.inquiry-step { display:grid; gap:28px; margin:0; padding:0; border:0; min-inline-size:0; }
+.inquiry-step legend { padding:0 0 4px; font:600 clamp(40px,4.4vw,68px)/.98 "Barlow Condensed",sans-serif; text-transform:uppercase; letter-spacing:-.035em; }
+.inquiry-step > p { margin:0; max-width:560px; color:var(--fog); line-height:1.65; }
+.project-type-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:12px; }
 .project-type { min-height:50px; border:1px solid rgba(238,241,237,.25); background:transparent; color:var(--paper); padding:10px 12px; cursor:pointer; text-align:left; font:500 11px/1.25 "IBM Plex Mono",monospace; text-transform:uppercase; letter-spacing:.06em; }
 .project-type:hover, .project-type:focus-visible { border-color:var(--acid); }
 .project-type.is-selected { background:var(--acid); color:var(--ink); border-color:var(--acid); }
 .project-form input:focus-visible, .project-form textarea:focus-visible, .project-form select:focus-visible { outline:none; border-bottom-color:var(--acid); box-shadow:0 2px 0 var(--acid); }
-.inquiry-actions { display:flex; gap:20px; align-items:center; justify-content:space-between; }
+.inquiry-actions { display:flex; gap:20px; align-items:center; justify-content:space-between; margin-top:2px; }
 .inquiry-actions .button { margin-left:auto; }
 .form-status.is-error { color:#ffb3a7; }
 .inquiry-review { display:grid; gap:8px; padding:18px 0; border-top:1px solid rgba(238,241,237,.18); border-bottom:1px solid rgba(238,241,237,.18); }
@@ -1256,8 +1256,9 @@ footer > div a { width:fit-content; font-size:13px; border-bottom:1px solid; pad
   .form-row { grid-template-columns:1fr; }
   .project-type-grid { grid-template-columns:1fr 1fr; }
   .inquiry-panel { padding-top:28px; padding-bottom:28px; }
-  .inquiry-step legend { font-size:clamp(48px,15vw,72px); }
-  .inquiry-actions { align-items:stretch; flex-direction:column-reverse; gap:12px; }
+  .inquiry-step { gap:26px; }
+  .inquiry-step legend { padding-bottom:6px; font-size:clamp(48px,15vw,72px); line-height:1; }
+  .inquiry-actions { align-items:stretch; flex-direction:column-reverse; gap:14px; margin-top:4px; }
   .inquiry-actions .button, .inquiry-actions .text-link { width:100%; margin:0; justify-content:center; }
   .project-form input, .project-form textarea { font-size:16px; }
   .capability { grid-template-columns:42px 1fr; }
