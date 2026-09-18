@@ -214,14 +214,18 @@ export default function CircularGallery({
 
             <p className="archive-scroll-cue">Scroll to rotate ↓</p>
 
-            <div className="archive-mobile-grid" aria-label="Photography archive">
+            <div
+              className="archive-mobile-grid"
+              aria-label="Swipe through the photography archive"
+              role="region"
+            >
               {items.map((item, index) => (
                 <button
                   type="button"
                   className="archive-mobile-card"
                   key={item.image}
                   onClick={(event) => openImage(index, event.currentTarget)}
-                  aria-label={`Open ${item.title}`}
+                  aria-label={`Open ${item.title}, image ${index + 1} of ${items.length}`}
                 >
                   <img
                     src={item.image}
@@ -231,12 +235,16 @@ export default function CircularGallery({
                     style={{ objectPosition: item.position || "center" }}
                   />
                   <span>
-                    <small>{String(index + 1).padStart(2, "0")} · {item.category}</small>
+                    <small>{String(index + 1).padStart(2, "0")} / {String(items.length).padStart(2, "0")} · {item.category}</small>
                     <strong>{item.title}</strong>
                   </span>
                 </button>
               ))}
             </div>
+            <p className="archive-mobile-swipe-cue" aria-hidden="true">
+              <span>Swipe photos</span>
+              <span>← →</span>
+            </p>
           </div>
         </section>
 
