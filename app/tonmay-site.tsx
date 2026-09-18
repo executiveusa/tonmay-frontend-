@@ -1,6 +1,6 @@
 "use client";
 
-import { KeyboardEvent as ReactKeyboardEvent, ReactNode, useEffect, useRef, useState } from "react";
+import { FormEvent, KeyboardEvent as ReactKeyboardEvent, ReactNode, useEffect, useRef, useState } from "react";
 import {
   AnimatePresence,
   MotionConfig,
@@ -94,6 +94,33 @@ const capabilities = [
   },
 ];
 
+
+type InquiryDraft = {
+  projectType: string;
+  projectSummary: string;
+  location: string;
+  date: string;
+  usage: string;
+  budget: string;
+  name: string;
+  email: string;
+  phone: string;
+};
+
+const emptyInquiry: InquiryDraft = {
+  projectType: "",
+  projectSummary: "",
+  location: "",
+  date: "",
+  usage: "",
+  budget: "",
+  name: "",
+  email: "",
+  phone: "",
+};
+
+const projectTypes = ["Portrait", "Event", "Brand", "Documentary", "Film", "Not sure yet"];
+
 function Arrow({ down = false }: { down?: boolean }) {
   return <span aria-hidden="true">{down ? "↓" : "↗"}</span>;
 }
@@ -125,6 +152,11 @@ export default function TonmaySite() {
   const [isMobile, setIsMobile] = useState(false);
   const [headerScrolled, setHeaderScrolled] = useState(false);
   const [selectedPhoto, setSelectedPhoto] = useState<number | null>(null);
+  const [inquiryStep, setInquiryStep] = useState(0);
+  const [inquiryDraft, setInquiryDraft] = useState<InquiryDraft>(emptyInquiry);
+  const [inquiryReady, setInquiryReady] = useState(false);
+  const [inquiryStatus, setInquiryStatus] = useState<"idle" | "sending" | "success" | "error">("idle");
+  const [inquiryMessage, setInquiryMessage] = useState("");
   const heroRef = useRef<HTMLElement>(null);
   const mobileNavRef = useRef<HTMLElement>(null);
   const menuButtonRef = useRef<HTMLButtonElement>(null);
@@ -179,6 +211,29 @@ export default function TonmaySite() {
     mediaQuery.addEventListener("change", updateViewport);
     return () => mediaQuery.removeEventListener("change", updateViewport);
   }, []);
+
+  useEffect(() => {
+    try {
+      const saved = window.localStorage.getItem("tonmay-project-inquiry");
+      if (saved) {
+        const parsed = JSON.parse(saved) as Partial<InquiryDraft>;
+        setInquiryDraft({ ...emptyInquiry, ...parsed });
+      }
+    } catch {
+      // A blocked or malformed localStorage entry should never block the form.
+    } finally {
+      setInquiryReady(true);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!inquiryReady || inquiryStatus === "success") return;
+    try {
+      window.localStorage.setItem("tonmay-project-inquiry", JSON.stringify(inquiryDraft));
+    } catch {
+      // Autosave is a convenience; the form remains usable without storage.
+    }
+  }, [inquiryDraft, inquiryReady, inquiryStatus]);
 
   useEffect(() => {
     if (!menuOpen) return;
@@ -278,6 +333,69 @@ export default function TonmaySite() {
 
   function closeMenu() {
     setMenuOpen(false);
+  }
+
+
+  function updateInquiry<K extends keyof InquiryDraft>(key: K, value: InquiryDraft[K]) {
+    setInquiryDraft((current) => ({ ...current, [key]: value }));
+    if (inquiryStatus === "error") {
+      setInquiryStatus("idle");
+      setInquiryMessage("");
+    }
+  }
+
+  function advanceInquiry() {
+    if (inquiryStep === 0 && (!inquiryDraft.projectType || !inquiryDraft.projectSummary.trim())) {
+      setInquiryStatus("error");
+      setInquiryMessage("Choose a project type and add one sentence about what you need.");
+      return;
+    }
+    if (inquiryStep === 1 && (!inquiryDraft.location.trim() || !inquiryDraft.usage.trim())) {
+      setInquiryStatus("error");
+      setInquiryMessage("Add the location and how you plan to use the work.");
+      return;
+    }
+    setInquiryStatus("idle");
+    setInquiryMessage("");
+    setInquiryStep((step) => Math.min(step + 1, 2));
+  }
+
+  async function submitInquiry(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    if (!inquiryDraft.name.trim() || !inquiryDraft.email.trim()) {
+      setInquiryStatus("error");
+      setInquiryMessage("Add your name and email so Tonmay can reply.");
+      return;
+    }
+
+    setInquiryStatus("sending");
+    setInquiryMessage("Sending your project details…");
+
+    try {
+      const response = await fetch("/api/inquiry", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(inquiryDraft),
+      });
+      const result = (await response.json()) as { ok?: boolean; message?: string };
+
+      if (!response.ok || !result.ok) {
+        throw new Error(result.message || "Your message could not be sent.");
+      }
+
+      setInquiryStatus("success");
+      setInquiryMessage("Received. Tonmay has your project details and can reply from there.");
+      setInquiryDraft(emptyInquiry);
+      setInquiryStep(0);
+      try {
+        window.localStorage.removeItem("tonmay-project-inquiry");
+      } catch {}
+      if ("vibrate" in navigator) navigator.vibrate([45, 30, 80]);
+    } catch (error) {
+      setInquiryStatus("error");
+      setInquiryMessage(error instanceof Error ? error.message : "Your message could not be sent. Please try again.");
+      if ("vibrate" in navigator) navigator.vibrate(80);
+    }
   }
 
   return (
@@ -596,24 +714,180 @@ export default function TonmaySite() {
               <p className="eyebrow">Check availability</p>
               <h2>Tell me about<br />your shoot.</h2>
               <p>
-                Email the basics below. I’ll reply with availability and next steps.
+                Three quick steps. Your answers save on this device as you go, so you can come back without starting over.
               </p>
             </Reveal>
 
             <Reveal className="inquiry-panel">
-              <p className="inquiry-label">What to include</p>
-              <ol>
-                <li><span>01</span><strong>What you’re making</strong></li>
-                <li><span>02</span><strong>Where and when it happens</strong></li>
-                <li><span>03</span><strong>How you’ll use the photos or film</strong></li>
-                <li><span>04</span><strong>Your working budget, if known</strong></li>
-              </ol>
-              <a
-                className="button button-acid inquiry-button"
-                href="mailto:tonmay.production@gmail.com?subject=Tonmay%20Production%20project%20inquiry"
-              >
-                Email Tonmay <Arrow />
-              </a>
+              {inquiryStatus === "success" ? (
+                <div className="inquiry-success" role="status" aria-live="polite">
+                  <span aria-hidden="true">✓</span>
+                  <p className="inquiry-label">Project received</p>
+                  <h3>That’s it.</h3>
+                  <p>{inquiryMessage}</p>
+                  <button
+                    className="text-link light inquiry-reset"
+                    type="button"
+                    onClick={() => {
+                      setInquiryStatus("idle");
+                      setInquiryMessage("");
+                    }}
+                  >
+                    Send another project <Arrow />
+                  </button>
+                </div>
+              ) : (
+                <form className="project-form" onSubmit={submitInquiry}>
+                  <div className="inquiry-progress" aria-label={`Step ${inquiryStep + 1} of 3`}>
+                    <span>Step {inquiryStep + 1} / 3</span>
+                    <div aria-hidden="true"><i style={{ width: `${((inquiryStep + 1) / 3) * 100}%` }} /></div>
+                    <small>{inquiryReady ? "Autosaved on this device" : "Loading saved answers…"}</small>
+                  </div>
+
+                  {inquiryStep === 0 && (
+                    <fieldset className="inquiry-step">
+                      <legend>What are you making?</legend>
+                      <p>Pick the closest fit, then give Tonmay one sentence.</p>
+                      <div className="project-type-grid">
+                        {projectTypes.map((type) => (
+                          <button
+                            key={type}
+                            type="button"
+                            className={inquiryDraft.projectType === type ? "project-type is-selected" : "project-type"}
+                            aria-pressed={inquiryDraft.projectType === type}
+                            onClick={() => updateInquiry("projectType", type)}
+                          >
+                            {type}
+                          </button>
+                        ))}
+                      </div>
+                      <label>
+                        <span>What do you need?</span>
+                        <textarea
+                          rows={3}
+                          maxLength={500}
+                          value={inquiryDraft.projectSummary}
+                          onChange={(event) => updateInquiry("projectSummary", event.target.value)}
+                          placeholder="Example: portraits for our new team page."
+                          required
+                        />
+                      </label>
+                    </fieldset>
+                  )}
+
+                  {inquiryStep === 1 && (
+                    <fieldset className="inquiry-step">
+                      <legend>Where, when, and what for?</legend>
+                      <div className="form-row">
+                        <label>
+                          <span>Location</span>
+                          <input
+                            value={inquiryDraft.location}
+                            onChange={(event) => updateInquiry("location", event.target.value)}
+                            placeholder="Seattle, Tacoma, on-site…"
+                            autoComplete="street-address"
+                            required
+                          />
+                        </label>
+                        <label>
+                          <span>Date, if known</span>
+                          <input
+                            type="date"
+                            value={inquiryDraft.date}
+                            onChange={(event) => updateInquiry("date", event.target.value)}
+                          />
+                        </label>
+                      </div>
+                      <label>
+                        <span>How will you use the photos or film?</span>
+                        <input
+                          value={inquiryDraft.usage}
+                          onChange={(event) => updateInquiry("usage", event.target.value)}
+                          placeholder="Website, social, campaign, personal…"
+                          required
+                        />
+                      </label>
+                      <label>
+                        <span>Working budget, if known</span>
+                        <input
+                          value={inquiryDraft.budget}
+                          onChange={(event) => updateInquiry("budget", event.target.value)}
+                          placeholder="Optional"
+                          inputMode="text"
+                        />
+                      </label>
+                    </fieldset>
+                  )}
+
+                  {inquiryStep === 2 && (
+                    <fieldset className="inquiry-step">
+                      <legend>Where should Tonmay reply?</legend>
+                      <div className="form-row">
+                        <label>
+                          <span>Name</span>
+                          <input
+                            value={inquiryDraft.name}
+                            onChange={(event) => updateInquiry("name", event.target.value)}
+                            autoComplete="name"
+                            required
+                          />
+                        </label>
+                        <label>
+                          <span>Email</span>
+                          <input
+                            type="email"
+                            value={inquiryDraft.email}
+                            onChange={(event) => updateInquiry("email", event.target.value)}
+                            autoComplete="email"
+                            inputMode="email"
+                            required
+                          />
+                        </label>
+                      </div>
+                      <label>
+                        <span>Phone, optional</span>
+                        <input
+                          type="tel"
+                          value={inquiryDraft.phone}
+                          onChange={(event) => updateInquiry("phone", event.target.value)}
+                          autoComplete="tel"
+                          inputMode="tel"
+                        />
+                      </label>
+                      <div className="inquiry-review">
+                        <span>{inquiryDraft.projectType || "Project"}</span>
+                        <strong>{inquiryDraft.projectSummary || "Your project details"}</strong>
+                        <small>{inquiryDraft.location}{inquiryDraft.date ? ` · ${inquiryDraft.date}` : ""}</small>
+                      </div>
+                    </fieldset>
+                  )}
+
+                  <div className="inquiry-actions">
+                    {inquiryStep > 0 && (
+                      <button className="text-link light" type="button" onClick={() => setInquiryStep((step) => step - 1)}>
+                        ← Back
+                      </button>
+                    )}
+                    {inquiryStep < 2 ? (
+                      <button className="button button-acid inquiry-button" type="button" onClick={advanceInquiry}>
+                        Continue <Arrow />
+                      </button>
+                    ) : (
+                      <button className="button button-acid submit-button" type="submit" disabled={inquiryStatus === "sending"}>
+                        {inquiryStatus === "sending" ? "Sending…" : "Send project"} <Arrow />
+                      </button>
+                    )}
+                  </div>
+
+                  <p
+                    className={inquiryStatus === "error" ? "form-status is-error" : "form-status"}
+                    role="status"
+                    aria-live="polite"
+                  >
+                    {inquiryMessage || "No account needed. Tonmay receives the answers by email."}
+                  </p>
+                </form>
+              )}
             </Reveal>
           </section>
         </main>
