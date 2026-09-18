@@ -192,6 +192,7 @@ export default function CircularGallery({
                       alt={item.title}
                       loading="lazy"
                       decoding="async"
+                      className={item.title === "Stair study" ? "archive-image-contain" : undefined}
                       style={{ objectPosition: item.position || "center" }}
                     />
                     <span className="circular-card-copy">
@@ -233,6 +234,7 @@ export default function CircularGallery({
                     alt={item.title}
                     loading="lazy"
                     decoding="async"
+                    className={item.title === "Stair study" ? "archive-image-contain" : undefined}
                     style={{ objectPosition: item.position || "center" }}
                   />
                   <span>
