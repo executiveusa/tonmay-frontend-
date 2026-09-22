@@ -464,6 +464,14 @@ img { display: block; width: 100%; }
   object-fit: cover;
   filter: saturate(.86) contrast(1.04);
 }
+
+/* Summer Study is a composed portrait frame. Preserve the full photograph
+   instead of forcing it through the shared cover crop used by other cards. */
+.photo-card-8 .photo-card-image img {
+  object-fit: contain;
+  object-position: center center !important;
+  background: #c7cbca;
+}
 .photo-card-caption {
   display: grid;
   grid-template-columns: 34px 1fr auto auto;
