@@ -14,6 +14,19 @@ export const metadata: Metadata = {
       "An immersive archive of portrait, landscape, editorial, and documentary photography by Tonmay.",
     url: "/gallery",
     type: "website",
+    images: [
+      {
+        url: "/images/archive/studio-fashion.webp",
+        alt: "Selected portrait photography from the Tonmay archive",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Photography Archive — Tonmay",
+    description:
+      "An immersive archive of portrait, landscape, editorial, and documentary photography by Tonmay.",
+    images: ["/images/archive/studio-fashion.webp"],
   },
 };
 

@@ -769,6 +769,7 @@ export default function TonmaySite() {
                           value={inquiryDraft.projectSummary}
                           onChange={(event) => updateInquiry("projectSummary", event.target.value)}
                           placeholder="Example: portraits for our new team page."
+                          aria-invalid={inquiryStatus === "error" && !inquiryDraft.projectSummary.trim()}
                           required
                         />
                       </label>
@@ -786,6 +787,7 @@ export default function TonmaySite() {
                             onChange={(event) => updateInquiry("location", event.target.value)}
                             placeholder="Seattle, Tacoma, on-site…"
                             autoComplete="street-address"
+                            aria-invalid={inquiryStatus === "error" && !inquiryDraft.location.trim()}
                             required
                           />
                         </label>
@@ -804,6 +806,7 @@ export default function TonmaySite() {
                           value={inquiryDraft.usage}
                           onChange={(event) => updateInquiry("usage", event.target.value)}
                           placeholder="Website, social, campaign, personal…"
+                          aria-invalid={inquiryStatus === "error" && !inquiryDraft.usage.trim()}
                           required
                         />
                       </label>
@@ -829,6 +832,7 @@ export default function TonmaySite() {
                             value={inquiryDraft.name}
                             onChange={(event) => updateInquiry("name", event.target.value)}
                             autoComplete="name"
+                            aria-invalid={inquiryStatus === "error" && !inquiryDraft.name.trim()}
                             required
                           />
                         </label>
@@ -840,6 +844,7 @@ export default function TonmaySite() {
                             onChange={(event) => updateInquiry("email", event.target.value)}
                             autoComplete="email"
                             inputMode="email"
+                            aria-invalid={inquiryStatus === "error" && !inquiryDraft.email.trim()}
                             required
                           />
                         </label>
