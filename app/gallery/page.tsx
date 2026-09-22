@@ -5,6 +5,16 @@ export const metadata: Metadata = {
   title: "Photography Archive — Tonmay",
   description:
     "An immersive archive of portrait, landscape, editorial, and documentary photography by Tonmay.",
+  alternates: {
+    canonical: "/gallery",
+  },
+  openGraph: {
+    title: "Photography Archive — Tonmay",
+    description:
+      "An immersive archive of portrait, landscape, editorial, and documentary photography by Tonmay.",
+    url: "/gallery",
+    type: "website",
+  },
 };
 
 const archive: GalleryItem[] = [
