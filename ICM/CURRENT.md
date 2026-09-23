@@ -8,36 +8,44 @@
 - Production project: `prj_aL8cRGd8mQv9XvjDRn1WlJ7rc0YD`
 
 ## Current stage
-`30_validate` — final technical cleanup and hold for verified portfolio proof.
+`40_hold` — production cleanup complete; waiting for verified portfolio/project context.
 
-## Current production baseline
-- Production SHA: `abe2308b9f9a61b16324de2ddd3edfdbbfdb9f6c`
-- Production deployment: `dpl_5dawmBJdX9vHu95WaHrXgpmecPEr`
-- Verified routes: `/` and `/gallery` return 200.
-- Current Vercel status: success.
-- Runtime errors: none found in the latest 24-hour audit window.
+## Verified production
+- Last fully verified production code commit: `da4499c6aa312b6ab84a105bfc29c4540021d222`
+- Verified production deployment: `dpl_55Z2cGa9kgFvQXEcpZCGXiXeMTa8`
+- Deployment state: `READY`
+- Canonical Vercel alias attached: `tonmay-frontend.vercel.app`
+- Verified routes on that deployment: `/` and `/gallery`
+- Verified cleanup markers:
+  - inquiry fields expose `aria-invalid`
+  - gallery has dedicated Twitter metadata
+  - gallery canonical/Open Graph URL points to `/gallery`
+  - Summer Study full-frame treatment is preserved
+  - Stair Study full-frame treatment is preserved
+- Runtime errors: none found in the final verification window.
 - Netlify: no matching Tonmay project.
 
-## Active cleanup branch
-`chore/final-cleanup-2026-09-22`
+## Active work
+No active remediation branch or open pull request is required for the website.
 
 ## Read scope
 Agents may inspect the repository, production runtime, deployment state, public routes, tests, and project documentation.
 
 ## Write scope
-For cleanup or remediation:
+For future changes:
 - use an isolated branch;
 - make bounded changes only;
-- preserve rollback to the production SHA above;
+- preserve rollback to the current verified production;
 - do not fabricate portfolio proof;
-- do not merge or deploy without post-change evidence.
+- verify the exact branch/commit before merge;
+- verify the exact merged SHA in production before claiming completion.
 
-## Current content hold
+## Content hold
 Do not add client, assignment, testimonial, award, result, or project-detail claims until verified source information is supplied.
 
-## Pass bar
-Before release:
-1. preview deploy succeeds;
+## Current pass bar
+Before any future release:
+1. preview/deploy succeeds;
 2. exact branch SHA is known;
 3. changed routes/metadata/behavior are verified;
 4. merge is tied to the expected head SHA;
@@ -46,7 +54,4 @@ Before release:
 7. no new runtime blocker appears.
 
 ## Next handoff
-After this cleanup release, hold for verified portfolio/project context. No further visual expansion is currently required.
-
-## Deployment retry marker
-- 2026-09-22: no-behavior-change commit used to retrigger the final Vercel production build after an account build-rate limit.
+Resume only when verified portfolio/project context is available or a new product requirement is approved.
