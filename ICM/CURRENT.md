@@ -47,3 +47,6 @@ Before release:
 
 ## Next handoff
 After this cleanup release, hold for verified portfolio/project context. No further visual expansion is currently required.
+
+## Deployment retry marker
+- 2026-09-22: no-behavior-change commit used to retrigger the final Vercel production build after an account build-rate limit.
